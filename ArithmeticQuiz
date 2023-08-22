@@ -1,0 +1,80 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+    private static final int NUM_QUESTIONS = 5;
+    private static final int MAX_NUMBER = 100; // Maximum number for the questions
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int score = 0;
+        for (int i = 1; i <= NUM_QUESTIONS; i++) {
+            String question = generateQuestion();
+            System.out.print("Question " + i + ": " + question + " = ");
+            int userAnswer = scanner.nextInt();
+
+            if (checkAnswer(question, userAnswer)) {
+                System.out.println("Correct!\n");
+                score++;
+            } else {
+                System.out.println("Incorrect. The correct answer is: " + evaluate(question) + "\n");
+            }
+        }
+
+        System.out.println("Quiz complete!\nYour score: " + score + " out of " + NUM_QUESTIONS);
+        scanner.close();
+    }
+
+    private static String generateQuestion() {
+        Random random = new Random();
+        int number1 = random.nextInt(MAX_NUMBER + 1);
+        int number2 = random.nextInt(MAX_NUMBER + 1);
+        int operator = random.nextInt(4); // 0: addition, 1: subtraction, 2: multiplication, 3: division
+
+        String operatorSymbol;
+        switch (operator) {
+            case 0:
+                operatorSymbol = " + ";
+                break;
+            case 1:
+                operatorSymbol = " - ";
+                break;
+            case 2:
+                operatorSymbol = " * ";
+                break;
+            case 3:
+                operatorSymbol = " / ";
+                break;
+            default:
+                operatorSymbol = " + ";
+        }
+
+        return number1 + operatorSymbol + number2;
+    }
+
+    private static int evaluate(String question) {
+        String[] parts = question.split("\\s+");
+        int number1 = Integer.parseInt(parts[0]);
+        int number2 = Integer.parseInt(parts[2]);
+        String operator = parts[1];
+
+        switch (operator) {
+            case "+":
+                return number1 + number2;
+            case "-":
+                return number1 - number2;
+            case "*":
+                return number1 * number2;
+            case "/":
+                return number1 / number2;
+            default:
+                return 0;
+        }
+    }
+
+    private static boolean checkAnswer(String question, int userAnswer) {
+        int correctAnswer = evaluate(question);
+        return userAnswer == correctAnswer;
+    }
+}
